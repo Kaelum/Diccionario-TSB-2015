@@ -7,7 +7,9 @@ package CapaLogicaDeNegocios;
 // Esta es la forma de programar un dependencia (temporal)
 // Aca explica todas las relaciones, leer bien para entender
 //https://vaughnvernon.co/?page_id=31
+//http://www.vogella.com/tutorials/DependencyInjection/article.html
 import CapaLogicaDeNegocios.Diccionario;
+import CapaPresentacion.PantallaConsola;
 
 
 /**
@@ -21,8 +23,10 @@ public class GestorDiccionarios {
     
     //
     
-    public void nuevoDiccionario()
-    {
+    public void nuevoDiccionario(){
+        
+        String nombreDiccionario =  PantallaConsola.pedirNombreDiccionario();
+        
     }
     
     

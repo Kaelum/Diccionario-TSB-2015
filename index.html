@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Zeditio Software</title>
+	<!--[if IE]> icono <![endif]-->
+
+
+	<link rel="icon" type="Resources/image/png" sizes="32x32" href="icono/favicon-32x32.png">
+	<link rel="icon" type="Resources/image/png" sizes="96x96" href="icono/favicon-96x96.png">
+	<link rel="icon" type="Resources/image/png" sizes="16x16" href="icono/favicon-16x16.png">
+	<!--[if IE]> icono <![endif]-->
+
+
+
+	<link rel="stylesheet" type="text/css" href="Resources/fullPage/jquery.fullPage.css" />
+	<link rel="stylesheet" type="text/css" href="Resources/fullPage/examples.css" />
+	<style>
+
+	/* Style for our header texts
+	* --------------------------------------- */
+	h1{
+		font-size: 10em;
+		font-family: arial,helvetica;
+		color: #fff;
+		margin:0;
+		padding:0;
+	}
+	h2{
+		font-size: 5em;
+		font-family: arial,helvetica;
+		color: #000;
+		margin:0;
+		padding:0;
+	}
+	p{
+		font-size: 4em;
+		font-style: italic;
+		color: #C63D0F;
+	}
+
+
+	/* Centered texts in each section
+	* --------------------------------------- */
+	.section{
+		text-align:center;
+	}
+
+
+	/* Backgrounds will cover all the section
+	* --------------------------------------- */
+	.section{
+		background-size: cover;
+	}
+	.slide{
+		background-size: cover;
+	}
+
+	/* Defining each section background and styles
+	* --------------------------------------- */
+	#section0{
+		background-image: url(Resources/bg2.jpg);
+		text-shadow: 0px 0px 100px #000;
+		padding: 10% 0 0 0;
+	}
+
+	#section1{
+		background-color: #C63D0F;
+		padding: 6% 0 0 0;
+	}
+	#section1 p{
+		color: #fff;
+	}
+
+	#section2{
+		background-color: #01020d;
+		padding: 6% 0 0 0;
+	}
+	#section3 h1{
+		color: #000;
+	}
+
+
+ 	/*Adding background for the slides
+	* --------------------------------------- */
+	#slide1{
+		background-image: url(Resources/imgs/bg2.jpg);
+		padding: 6% 0 0 0;
+	}
+	#slide2{
+		background-image: url(Resources/imgs/bg5.jpg);
+		padding: 6% 0 0 0;
+	}
+
+
+	/* Bottom menu
+	* --------------------------------------- */
+	#infoMenu li a {
+		color: #fff;
+	}
+	</style>
+
+	<!--[if IE]>
+		<script type="text/javascript">
+			 var console = { log: function() {} };
+		</script>
+	<![endif]-->
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+	<script type="text/javascript" src="Resources/fullPage/jquery.fullPage.js"></script>
+	<script type="text/javascript" src="Resources/fullPage/examples.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#fullpage').fullpage({
+				verticalCentered: false
+
+			});
+		});
+	</script>
+
+</head>
+<body>
+
+<div id="fullpage">
+	<div class="section " id="section0"><h1>Zeditio</h1>
+		<p>"Software para el mundo"</p>
+	</div>
+
+	<div class="section" id="section1"><h2>Que hacemos?</h2>
+			<p>Somos un equipo preparado para brindarle las soluciones de software
+			 que usted necesita</p></div>
+	<div class="section" id="section2"><h1>Expect Us!</h1>
+			<img src="Resources/logoBlanco.png">
+			
+			</div>
+</div>
+
+</body>
+</html>

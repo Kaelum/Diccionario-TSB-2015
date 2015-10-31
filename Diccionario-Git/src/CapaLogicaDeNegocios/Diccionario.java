@@ -25,6 +25,24 @@ public class Diccionario {
 
     public Diccionario() {
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public Timestamp getFecha() {
+        return fecha;
+    }
+    
+    public Diccionario buscarPalabra(String patron){
+        
+       return null;
+    }
+
+    @Override
+    public String toString() {
+        return "Diccionario{" + "nombre=" + nombre + ", fecha=" + fecha + ", frecuencia=" + frecuencia + '}';
+    }
     
     
     

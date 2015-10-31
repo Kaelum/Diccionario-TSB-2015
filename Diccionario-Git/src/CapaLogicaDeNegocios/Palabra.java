@@ -11,6 +11,14 @@ package CapaLogicaDeNegocios;
  */
 public class Palabra {
     private String nombre;
+    private String archivo;
+
+    public Palabra(String nombre, String archivo) {
+        this.nombre = nombre;
+        this.archivo = archivo;
+    }
+    
+    
     
     
 }

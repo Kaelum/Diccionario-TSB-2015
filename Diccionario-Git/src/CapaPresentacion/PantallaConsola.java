@@ -5,6 +5,7 @@
  */
 package CapaPresentacion;
 import CapaLogicaDeNegocios.Archivo;
+import CapaLogicaDeNegocios.Diccionario;
 import CapaLogicaDeNegocios.GestorDiccionarios;
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,6 +21,7 @@ public class PantallaConsola {
     private static Scanner sc;
     private static String nombreDiccionario;
     private static Archivo archivoDeTexto;
+    private static String palabraABuscar;
     
     public static void main(String[] args) {
         
@@ -29,14 +31,14 @@ public class PantallaConsola {
             System.out.println("Seleecione Un CU  \n"
                 + " 1: Generar Diccionario \n"
                 + " 2: Buscar Palabras \n"
-                + " 0: SALIR \n");
+                + " 0: SALIR");
            
             opcion =  sc.nextInt();
             
             switch (opcion){
-                case 1: 
+                case 1: opcionGenerarDiccionario();
                         break;
-                case 2: System.out.println("Llamo al caso de uso 2");
+                case 2: opcionBuscarPalabra();
                         break;
             }
             
@@ -55,22 +57,54 @@ public class PantallaConsola {
         gestor.nuevoDiccionario();
     
     }
-    
-    
+        
     public static String pedirNombreDiccionario()
     {
-        System.out.println("Ingrese el nombre del diccionario");
+        System.out.println("Ingrese el nombre del diccionario que estan en ArchivosDeTexto");
         // el read seria como tomar nombre diccionario desde el actor
-        return nombreDiccionario = sc.nextLine();
+        nombreDiccionario = sc.next();
+        return nombreDiccionario;
     }
     
-    public static File pedirArchivosDeTexto()
+    public static Archivo pedirArchivosDeTexto()
     {
         System.out.println("Ingrese el nombre del archivo");
         // el read seria como tomar nombre diccionario desde el actor
-        return archivoDeTexto = new Archivo(sc.nextLine());
+        String ruta = "src\\ArchivosDeTexto\\";
+        String nombre = sc.next();
+        archivoDeTexto = new Archivo(ruta+nombre);
+        return archivoDeTexto;
                 
     }
             
     
+    public static void opcionBuscarPalabra(){
+        System.out.println("Llamo al caso de uso 1");
+        //habilitar pnatllas
+        GestorDiccionarios gestor = new GestorDiccionarios();
+        gestor.buscarPalabra();
+    }
+    
+    public static Diccionario pedirSeleccionDiccionario(Diccionario vector)
+    {
+        System.out.println("Seleccione Un Diccionario (1,2,3,4)");
+        // el read seria como tomar nombre diccionario desde el actor
+        //int indice = sc.nextInt();
+        //return vector[indice];
+        return vector;
+                
+    }
+    
+    public static void mostrarDiccionario(Diccionario dicionario){
+        //en la pantalla se cargara la grilla
+        dicionario.toString();
+    }
+    
+    public static String pedirPalabraABuscar()
+    {
+        System.out.println("La palabra a buscar");
+        // el read seria como tomar nombre diccionario desde el actor
+        palabraABuscar = sc.next();
+        return palabraABuscar;
+    }
 }

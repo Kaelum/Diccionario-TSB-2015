@@ -5,6 +5,8 @@
  */
 package CapaLogicaDeNegocios;
 
+import java.util.Objects;
+
 /**
  *
  * @author Jose
@@ -17,6 +19,37 @@ public class Frecuencia {
         this.contador = 1;
         this.palabra = palabra;
     }
+    
+    public void sumar()
+    {
+        this.contador = this.contador+1;
+    }
+
+    @Override
+    public int hashCode() {
+        return palabra.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return palabra.equals(obj);
+    }
+    
+    public String mostrarTodo() {
+        return "Frecuencia{" + "contador=" + contador + ", palabra=" + palabra + '}';
+        
+    }
+
+    @Override
+    public String toString() {
+        return "Frecuencia{" + "contador=" + contador + ", archivo=" + palabra.getArchivo() + '}';
+    }
+    
+    
+
+    
+    
+    
     
     
 }

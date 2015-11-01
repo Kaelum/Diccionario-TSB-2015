@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -29,7 +30,10 @@ public class Archivo  extends File {
         super(string);
     }
     
-    
+    public Palabra[] leerTodasLasPalabras22(){
+        //es menos eficiente y lindo este codigo pero el otro no funciona
+        return  null;
+    }
     public Palabra[] leerTodasLasPalabras(){
         //leo todo el libro en un string
         String libroCompleto = null;
@@ -38,21 +42,31 @@ public class Archivo  extends File {
         } catch (IOException ex) {
             Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("Sin filtro: \n" + libroCompleto);
+        //System.out.println("Sin filtro: \n" + libroCompleto);
         //para no complicarnos primero elimino las cosas que no van y luego las palabra alfanumericas
         //todo las palabras que tiene un numero
         // 2 horas reloj para encontrar la puta expresion regular y no anda.
         String filtro = "\\b[^A-Za-z]*\\b";
-        //filtro = "([A-Za-z])\\w+";
+        filtro = "[^\\\\p{L}\\\\p{Nd}]+";
+        filtro = "[^[\\s|\\t|\\n|\\r|] A-Za-z$]*";
+        filtro = "[^ A-Za-z$ ]*";
+        filtro = "[^A-Za-z$]*";
         String libroFiltrado;
-        libroFiltrado = libroCompleto.replaceAll(filtro,"");
-        
-        System.out.println("Con filtro: \n" + libroFiltrado);
+        //anda maso menos
+        libroFiltrado = libroCompleto.replaceAll("\\b[^A-Za-z]*\\b", " ");
+        // como me quedan mucho espacion en balnco los camvbio por uno solo para poder despues hacer el split
+        //libroFiltrado = libroCompleto.replaceAll("[ ]*", " ");
         libroFiltrado = libroFiltrado.toLowerCase();
-        String [] cadenas = libroCompleto.split(" ");
+        System.out.println("---------- LIBRO ILTRADO");
+        //System.out.println(libroFiltrado);
+        //CON LO MISMO QUE REEMPLAZO
+        String [] cadenas = libroFiltrado.split(" ");
+        
         Palabra [] palabras = new Palabra[cadenas.length];
+        System.out.println("----------TODAS LAS PALABRAS");
         for (int i = 0; i < cadenas.length ; i++) {
             palabras[i] = new Palabra(cadenas[i],getName());
+            //ystem.out.println(palabras[i]);
             
         }
         return palabras;

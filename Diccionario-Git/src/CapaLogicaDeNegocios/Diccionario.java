@@ -7,6 +7,9 @@ package CapaLogicaDeNegocios;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -15,13 +18,15 @@ import java.util.Date;
 public class Diccionario {
     private String nombre;
     private Timestamp fecha;
-    private Frecuencia [] frecuencia;
+    private HashMap <Palabra,  List <Frecuencia>> tablaDeFrecuencias;
 
-    public Diccionario(String nombre, Frecuencia[] frecuencia) {
+    public Diccionario(String nombre, HashMap<Palabra, List<Frecuencia>> tablaDeFrecuencias) {
         this.nombre = nombre;
         this.fecha = new Timestamp(System.currentTimeMillis());
-        this.frecuencia = frecuencia;
+        this.tablaDeFrecuencias = tablaDeFrecuencias;
     }
+
+    
 
     public Diccionario() {
     }
@@ -33,6 +38,11 @@ public class Diccionario {
     public Timestamp getFecha() {
         return fecha;
     }
+
+    public HashMap<Palabra, List<Frecuencia>> getTablaDeFrecuencias() {
+        return tablaDeFrecuencias;
+    }
+    
     
     public Diccionario buscarPalabra(String patron){
         
@@ -41,7 +51,14 @@ public class Diccionario {
 
     @Override
     public String toString() {
-        return "Diccionario{" + "nombre=" + nombre + ", fecha=" + fecha + ", frecuencia=" + frecuencia + '}';
+        String resultado= "Diccionario{" + "nombre=" + nombre + ", fecha=" + fecha;
+        // Imprimimos el Map con un Iterador
+        Iterator it = tablaDeFrecuencias.keySet().iterator();
+        while(it.hasNext()){
+          Palabra nombreClave = (Palabra) it.next();
+          resultado+="\n Clave: " + nombreClave.getNombre() + " -> Valor: " + tablaDeFrecuencias.get(nombreClave);
+        }
+        return resultado;
     }
     
     

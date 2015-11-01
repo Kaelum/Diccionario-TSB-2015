@@ -7,25 +7,23 @@ package CapaPresentacion;
 import CapaLogicaDeNegocios.Archivo;
 import CapaLogicaDeNegocios.Diccionario;
 import CapaLogicaDeNegocios.GestorDiccionarios;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 /**
  *
  * @author Jose
  */
 public class PantallaConsola {
-    
-    private static Scanner sc;
-    private static String nombreDiccionario;
-    private static Archivo archivoDeTexto;
-    private static String palabraABuscar;
-    
-    public static void main(String[] args) {
-        
+    //que sea estatico significa que es de la clase y no del objeto en si mismo
+    private  Scanner sc;
+    private  String nombreDiccionario;
+    private  Archivo archivoDeTexto;
+    private  String palabraABuscar;
+
+    public PantallaConsola() {
         sc = new Scanner(System.in);
+    }
+    
+    public void mostrarPantalla() {
         int opcion;
         do {
             System.out.println("Seleecione Un CU  \n"
@@ -49,16 +47,17 @@ public class PantallaConsola {
     
     // para no hacer grande el break creamos un metodo
     
-    public static void opcionGenerarDiccionario(){
+    private void opcionGenerarDiccionario(){
         System.out.println("Llamo al caso de uso 1");
         //habilitar pnatllas
         GestorDiccionarios gestor = new GestorDiccionarios();
-        
-        gestor.nuevoDiccionario();
+        Diccionario dicCreado =  gestor.nuevoDiccionario();
+        System.out.println(gestor.mostrarDicionario(dicCreado));
+        System.out.println("");
     
     }
         
-    public static String pedirNombreDiccionario()
+    public String pedirNombreDiccionario()
     {
         System.out.println("Ingrese el nombre del diccionario que estan en ArchivosDeTexto");
         // el read seria como tomar nombre diccionario desde el actor
@@ -66,7 +65,7 @@ public class PantallaConsola {
         return nombreDiccionario;
     }
     
-    public static Archivo pedirArchivosDeTexto()
+    public Archivo pedirArchivosDeTexto()
     {
         System.out.println("Ingrese el nombre del archivo");
         // el read seria como tomar nombre diccionario desde el actor
@@ -78,14 +77,14 @@ public class PantallaConsola {
     }
             
     
-    public static void opcionBuscarPalabra(){
+    public void opcionBuscarPalabra(){
         System.out.println("Llamo al caso de uso 1");
         //habilitar pnatllas
         GestorDiccionarios gestor = new GestorDiccionarios();
         gestor.buscarPalabra();
     }
     
-    public static Diccionario pedirSeleccionDiccionario(Diccionario vector)
+    public Diccionario pedirSeleccionDiccionario(Diccionario vector)
     {
         System.out.println("Seleccione Un Diccionario (1,2,3,4)");
         // el read seria como tomar nombre diccionario desde el actor
@@ -95,12 +94,12 @@ public class PantallaConsola {
                 
     }
     
-    public static void mostrarDiccionario(Diccionario dicionario){
+    public void mostrarDiccionario(Diccionario dicionario){
         //en la pantalla se cargara la grilla
         dicionario.toString();
     }
     
-    public static String pedirPalabraABuscar()
+    public String pedirPalabraABuscar()
     {
         System.out.println("La palabra a buscar");
         // el read seria como tomar nombre diccionario desde el actor

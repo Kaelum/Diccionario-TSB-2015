@@ -26,8 +26,9 @@ public class SelectorDePantalla {
                 case 1: PantallaConsola pantallaC = new PantallaConsola();
                         pantallaC.mostrarPantalla();
                         break;
-                case 2: PantallaGrafica pantallaG = new PantallaGrafica();
+                case 2: PantallaGenerarDiccionario pantallaG = new PantallaGenerarDiccionario();
                         pantallaG.setVisible(true);
+                        pantallaG.toFront();
                         break;
             }
             

@@ -25,6 +25,14 @@ public class Frecuencia {
         this.contador = this.contador+1;
     }
 
+    public int getContador() {
+        return contador;
+    }
+
+    public Palabra getPalabra() {
+        return palabra;
+    }
+
     @Override
     public int hashCode() {
         return palabra.hashCode();

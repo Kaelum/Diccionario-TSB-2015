@@ -65,6 +65,12 @@ public class Palabra {
     public String toString() {
         return "Palabra{" + "nombre=" + nombre + ", archivo=" + archivo + '}';
     }
+    
+    public String guardarBD(){
+        String consulta="";
+        consulta="INSERT INTO PALABRA VALUES (default,'"+nombre+"')";
+        return  consulta;
+    }
 
     
     

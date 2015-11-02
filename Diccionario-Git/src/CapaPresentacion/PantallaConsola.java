@@ -8,6 +8,7 @@ import CapaLogicaDeNegocios.Archivo;
 import CapaLogicaDeNegocios.Diccionario;
 import CapaLogicaDeNegocios.GestorDiccionarios;
 import java.util.Scanner;
+import javax.tools.Diagnostic;
 /**
  *
  * @author Jose
@@ -51,15 +52,14 @@ public class PantallaConsola {
         System.out.println("Llamo al caso de uso 1");
         //habilitar pnatllas
         GestorDiccionarios gestor = new GestorDiccionarios();
-        Diccionario dicCreado =  gestor.nuevoDiccionario();
+        Diccionario dicCreado =  gestor.nuevoDiccionarioConsola();
         System.out.println(gestor.mostrarDicionario(dicCreado));
-        System.out.println("");
     
     }
         
     public String pedirNombreDiccionario()
     {
-        System.out.println("Ingrese el nombre del diccionario que estan en ArchivosDeTexto");
+        System.out.println("Ingrese el nombre del diccionario");
         // el read seria como tomar nombre diccionario desde el actor
         nombreDiccionario = sc.next();
         return nombreDiccionario;
@@ -97,6 +97,12 @@ public class PantallaConsola {
     public void mostrarDiccionario(Diccionario dicionario){
         //en la pantalla se cargara la grilla
         dicionario.toString();
+    }
+    
+    public void opcionGuardarDicionario(Diccionario diccionario){
+        System.out.println("Se esta guardando su diccionario");
+        GestorDiccionarios gestor = new GestorDiccionarios();
+        gestor.buscarPalabra();
     }
     
     public String pedirPalabraABuscar()

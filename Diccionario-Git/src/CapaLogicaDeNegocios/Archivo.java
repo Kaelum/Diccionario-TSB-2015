@@ -5,6 +5,7 @@
  */
 package CapaLogicaDeNegocios;
 
+import Soporte.Cronometro;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,6 +36,9 @@ public class Archivo  extends File {
         return  null;
     }
     public Palabra[] leerTodasLasPalabras(){
+        //voy a cornometrar el tiempo
+        Cronometro cronometro = new Cronometro();
+        cronometro.iniciar();
         //leo todo el libro en un string
         String libroCompleto = null;
         try {
@@ -69,6 +73,8 @@ public class Archivo  extends File {
             //ystem.out.println(palabras[i]);
             
         }
+        cronometro.parar();
+        System.out.println("Tiempo en leer: "+ cronometro.tiempo());   
         return palabras;
     } 
     
@@ -85,7 +91,11 @@ public class Archivo  extends File {
         }
     
  
-    
+    public String guardarBD(){
+        String consulta="";
+        consulta="INSERT INTO ACHIVO VALUES (default,'"+this.getName()+"')";
+        return  consulta;
+    }
  
     
 }

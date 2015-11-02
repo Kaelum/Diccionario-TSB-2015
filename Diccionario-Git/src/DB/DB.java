@@ -18,7 +18,9 @@ import java.sql.Statement;
  * @author jorge
  */
 public class DB {
-
+    
+    //como las variables van a ser publicas??????????????????
+    //hijo de putaa! jajaja
     public Connection conexion;
     public Statement sentencia;
     public ResultSet resultado;
@@ -31,8 +33,8 @@ public class DB {
         try {
             final String Controlador = "org.apache.derby.jdbc.ClientDriver";
             Class.forName(Controlador);
-            final String url_bd = "jdbc:derby://localhost:1527/base de datos ejemplo buscar palabra";
-            conexion = DriverManager.getConnection(url_bd, "jorge", "jorge");
+            final String url_bd = "jdbc:derby://localhost:1527/tsb2";
+            conexion = DriverManager.getConnection(url_bd, "jose", "jose");
             sentencia = conexion.createStatement();
             
         } catch (ClassNotFoundException | SQLException ex) {

@@ -1,0 +1,43 @@
+CREATE TABLE Palabra (
+id_palabra INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+nombre VARCHAR(25) NOT NULL,
+CONSTRAINT nombre_Un UNIQUE (nombre));
+
+CREATE TABLE  Archivo(
+id_archivo INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+nombre VARCHAR(25) NOT NULL,
+CONSTRAINT nombre_UQ UNIQUE (nombre)); 
+
+CREATE TABLE Diccionario (
+id_diccionario  INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+nombre VARCHAR(25),
+fecha TIMESTAMP NOT NULL); 
+
+CREATE TABLE  ArchivoXPalabra (
+id_archivo INT NOT NULL,
+id_palabra INT NOT NULL,
+frecuencia INT NOT NULL,
+PRIMARY KEY (id_archivo, id_palabra)); 
+
+CREATE TABLE  ArchivoXPalabraXDiccionario (
+id_archivo INT NOT NULL,
+id_palabra INT NOT NULL,
+id_diccionario INT NOT NULL,
+PRIMARY KEY (id_archivo, id_palabra, id_diccionario));
+
+Alter Table APP.ARCHIVOXPALABRA
+Add FOREIGN KEY (id_palabra)
+References APP.PALABRA (id_palabra);
+
+
+Alter Table APP.ARCHIVOXPALABRA
+Add FOREIGN KEY (id_archivo)
+References APP.ARCHIVO (id_archivo);
+
+Alter Table APP.ARCHIVOXPALABRAXDICCIONARIO
+Add FOREIGN KEY (id_archivo, id_palabra)
+References APP.ARCHIVOXPALABRA (id_archivo, id_palabra);
+
+Alter Table APP.ARCHIVOXPALABRAXDICCIONARIO
+Add FOREIGN KEY (id_diccionario)
+References APP.DICCIONARIO (id_diccionario);

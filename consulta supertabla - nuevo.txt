@@ -1,0 +1,20 @@
+CREATE TABLE Diccionario (
+id_diccionario INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+nombre VARCHAR(25) NOT NULL,
+fecha TIMESTAMP NOT NULL); 
+
+
+CREATE TABLE  superTabla (
+archivo VARCHAR(25) NOT NULL,
+palabra VARCHAR(25) NOT NULL,
+id_diccionario INT NOT NULL,
+frecuencia INT NOT NULL,
+PRIMARY KEY (archivo, palabra, id_diccionario));
+
+Alter Table superTabla
+Add FOREIGN KEY (id_diccionario)
+References APP.DICCIONARIO (id_diccionario);
+
+-- add a unique constraint to a column
+ALTER TABLE diccionario 
+ADD CONSTRAINT nombre_Unico UNIQUE (nombre);

@@ -171,59 +171,6 @@ public class Busqueda extends javax.swing.JFrame {
         }
     }
 
-//    public String crearTabla(){
-//
-//            String consulta="";
-//            consulta= "  CREATE TABLE Palabra"
-//                    + " ("
-//                    + " id_palabra INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"
-//                    + ", nombre VARCHAR(25) NOT NULL"
-//                    + ", CONSTRAINT nombre_Un"
-//                    + " UNIQUE (nombre)"
-//                    + "); "
-//                    + " CREATE TABLE  Archivo"
-//                    + "("
-//                    + " id_archivo INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"
-//                    + ", nombre VARCHAR(25) NOT NULL"
-//                    + ", CONSTRAINT nombre_UQ"
-//                    + " UNIQUE (nombre)"
-//                    + " ); "
-//                    + "CREATE TABLE Diccionario "
-//                    + "("
-//                    + " id_diccionario  INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"
-//                    + ", nombre VARCHAR(25)"
-//                    + ", fecha TIMESTAMP NOT NULL "
-//                    + "); "
-//                    + "CREATE TABLE  ArchivoXPalabra "
-//                    + "("
-//                    + " id_archivo INT NOT NULL"
-//                    + ", id_palabra INT NOT NULL"
-//                    + ", frecuencia INT NOT NULL"
-//                    + ", PRIMARY KEY (id_archivo, id_palabra)"
-//                    + ", CONSTRAINT archivo_FK"
-//                    + " FOREIGN KEY (id_archivo)"
-//                    + " REFERENCES Archivo (id_archivo)"
-//                    + ", CONSTRAINT palabra_FK"
-//                    + " FOREIGN KEY (id_palabra)"
-//                    + " REFERENCES Palabra (id_palabra)"
-//                    + "); "
-//                    + "CREATE TABLE  ArchivoXPalabraXDiccionario "
-//                    + "("
-//                    + " id_archivo INT NOT NULL"
-//                    + ", id_palabra INT NOT NULL"
-//                    + ", id_diccionario INT NOT NULL"
-//                    + ", PRIMARY KEY (id_archivo, id_palabra, id_diccionario)"
-//                    + ", CONSTRAINT juntar_FK"
-//                    + " FOREIGN KEY (id_archivo, id_palabra)"
-//                    + " REFERENCES ArchivoXPalabra (id_archivo, id_palabra)"
-//                    + ", CONSTRAINT dicc_FK"
-//                    + " FOREIGN KEY (id_diccionario)"
-//                    + " REFERENCES Diccionario (id_diccionario)"
-//                    + ")";
-//            System.out.println(consulta);
-//            
-//            return consulta;
-//    }
     private void Modelo() {
         try {
             Modelo_Tabla = (new DefaultTableModel(

@@ -10,7 +10,11 @@ package CapaLogicaDeNegocios;
 //http://www.vogella.com/tutorials/DependencyInjection/article.html
 import CapaLogicaDeNegocios.Diccionario;
 import CapaPresentacion.PantallaConsola;
+import DB.DB;
 import Soporte.Cronometro;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -141,10 +145,6 @@ public class GestorDiccionarios {
                         //si no esta en la lista esa palabra la voya a gregar
                         if (!estaEnLaLista) {
                             listaEncontrada.add(new Frecuencia(palabraAagregar));}
-                        
-                        
-                    
-                    
                 }
             else{
                     //creo una lista de frecuencia, con lo mucho se leera de 5 archivos
@@ -159,6 +159,7 @@ public class GestorDiccionarios {
         // una vez que lo creo lo asigno o se lo devuelvo a la pantalla?
         cronometro.parar();
         System.out.println("Tiempo de tabla Hash: "+ cronometro.tiempo());   
+        System.out.println("Cantitdad de palabras en el diciocnario: " +tablaDeFrecuencias.size());
         return diccionario;
         
     }
@@ -182,7 +183,34 @@ public class GestorDiccionarios {
     }
     
     
-    public boolean GuardarDicionario(Diccionario diccionario){
+    public boolean GuardarDicionario(Diccionario diccionario) throws SQLException{
+        //CORNOMETRO LA TABLA HAS
+        Cronometro cronometro = new  Cronometro();
+        cronometro.iniciar();
+        //me conecto con la db
+        //esto tiene que ser interno, ahy que armar 2 ducniones como en pav, una para consultar y otra para actualiza (insert)
+        DB baseDatos = new DB();
+        baseDatos.ConectarBD();
+        String consulta;
+        //el diccionario sabe como guardarse entonces le pido a el que haga el trbajo
+        consulta= diccionario.guardarBDDiccionaro();
+        Statement st = baseDatos.getConnection().createStatement();
+        //inserto el nuevo diccionario
+        st.executeUpdate(consulta, Statement.RETURN_GENERATED_KEYS);
+        //busco el di del diciconario que acabo de insertar
+        ResultSet rs = st.getGeneratedKeys();
+        int generatedKey = 0;
+        if (rs.next()) {
+            generatedKey = rs.getInt(1);
+        }
+        System.out.println("Inserted record's ID: " + generatedKey);
+        //ESTO ANDA PERO ESTA MAL, ES INEFICIENTE Y MUY ACOPLADO
+        //LE DIGO AL DICCIONARIO EN MEORARI QUE SE RECORRA E INSERTE FILA POR FIILA.
+        //ANTES QUERIA ARMAR UNA SOLA CONSULTA GIGANTE Y EJECUTARLA TODA DE UNA PERO NO PUDE HACERLO, SE PUEDE PERO NO ME SALE.
+        diccionario.connectarYguardarBDFrecuencias(generatedKey);
+
+       cronometro.parar();
+       System.out.println("Tiempo que atrda en guardar: " + cronometro.tiempo());
        return true; 
     }
 }

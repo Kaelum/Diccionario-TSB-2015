@@ -5,6 +5,10 @@
  */
 package Soporte;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  *
  * @author Jose
@@ -25,8 +29,11 @@ public class Cronometro {
         tiempoFin = System.currentTimeMillis();
     }
     
-    public long tiempo(){
-        return tiempoFin - tiempoInicio;
+    public String tiempo(){
+        long total = tiempoFin - tiempoInicio;
+        int seconds = (int) (total/ 1000) % 60 ;
+        int minutes = (int) ((total/ (1000*60)) % 60);
+        return "--- Min: " + minutes+ "Seg: "+seconds+" Milesimas: "+total;
         
     }
     

@@ -5,6 +5,10 @@
  */
 package CapaLogicaDeNegocios;
 
+import DB.DB;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -74,7 +78,7 @@ public class Diccionario {
         int index = 0;
          //obtengo el iterador de la hash map
         Iterator it = tablaDeFrecuencias.keySet().iterator();
-        while(it.hasNext()){
+        while(it.hasNext() && index <10){
            //itero todas las claves
           String nombreClave =  (String) it.next();
           String nombre = nombreClave;
@@ -90,7 +94,7 @@ public class Diccionario {
           index++;
           
         }
-        
+    
         
                         
                         
@@ -101,34 +105,72 @@ public class Diccionario {
     
     public String guardarBDDiccionaro(){
         String consulta="";
-        consulta="INSERT INTO PALABRA VALUES (default,'"+nombre+"')";
+        consulta=" INSERT INTO Diccionario VALUES (default,'"+nombre+"', TIMESTAMP('"+fecha.toString()+"'))";
         return  consulta;
     }
     
-    public String guardarBDFrecuencias(){
+    public String guardarBDFrecuencias(int pkDiccionario){
         
-        String megaConsulta = "";
+        String megaConsulta = "INSERT INTO SUPERTABLA VALUES ";
+        int contador = 0;
+        String archivoEncontrado =""; 
         // Imprimimos el Map con un Iterador
         Iterator it = tablaDeFrecuencias.keySet().iterator();
         while(it.hasNext()){
-            int contador = 0;
-            String archivoEncontrado =""; 
-            Palabra nombreClave = (Palabra) it.next();
-            List <Frecuencia> listaEncontrada = tablaDeFrecuencias.get(nombreClave);
-            for (Frecuencia frecuenciaEncontrada : listaEncontrada) {
-                            
-                            if (frecuenciaEncontrada.equals(nombreClave)) {
-                                contador = frecuenciaEncontrada.getContador();
-                                archivoEncontrado = frecuenciaEncontrada.getPalabra().getArchivo();
-                                break;
-                                }
-                        }
             
-            megaConsulta += "INSERT INTO SUPERTABLA VALUES ('"+nombreClave.getNombre()+"','"+archivoEncontrado+"',"+contador+")";
-                  
+            String nombreClave =  (String) it.next();
+            List <Frecuencia> listaEncontrada = tablaDeFrecuencias.get(nombreClave);
+            for (Iterator<Frecuencia> iterator = listaEncontrada.iterator(); iterator.hasNext();) {
+                Frecuencia next = iterator.next();
+                contador = next.getContador();
+                archivoEncontrado = next.getPalabra().getArchivo();
+                if (it.hasNext() != true) {
+                    //al ultimo no lleva coma, lleva un punto y coma
+                    megaConsulta += "('"+archivoEncontrado+"','"+nombreClave+"',"+pkDiccionario+","+contador+"); ";}
+                    else{ megaConsulta += "('"+archivoEncontrado+"','"+nombreClave+"',"+pkDiccionario+","+contador+"), ";
+                }
+                 
+            }
+//            for (Frecuencia frecuenciaEncontrada : listaEncontrada) {
+//                                contador = frecuenciaEncontrada.getContador();
+//                                archivoEncontrado = frecuenciaEncontrada.getPalabra().getArchivo();
+//                                //NO ANDA PORQUE SON MUCHAS LINEAS Y EL EXECUTE QUERY NO FUNCIONA ASI
+//                                //megaConsulta += "INSERT INTO SUPERTABLA VALUES ('"+archivoEncontrado+"','"+nombreClave+"',"+pkDiccionario+","+contador+");";
+//                                //megaConsulta += " \n ";
+//                                megaConsulta += "('"+archivoEncontrado+"','"+nombreClave+"',"+pkDiccionario+","+contador+"),  ";
+//            }
         }
+
+        return megaConsulta;
+    }
+    
+    
+    
+    public void connectarYguardarBDFrecuencias(int pkDiccionario) throws SQLException{
+        DB baseDatos = new DB();
+        baseDatos.ConectarBD();
+        Statement st = baseDatos.getConnection().createStatement();
+
+
+        String megaConsulta = "";
+        int contador = 0;
+        String archivoEncontrado =""; 
+        // Imprimimos el Map con un Iterador
+        Iterator it = tablaDeFrecuencias.keySet().iterator();
+        while(it.hasNext()){
+            
+            String nombreClave =  (String) it.next();
+            List <Frecuencia> listaEncontrada = tablaDeFrecuencias.get(nombreClave);
+            for (Iterator<Frecuencia> iterator = listaEncontrada.iterator(); iterator.hasNext();) {
+                Frecuencia next = iterator.next();
+                contador = next.getContador();
+                archivoEncontrado = next.getPalabra().getArchivo();
+                megaConsulta = "INSERT INTO SUPERTABLA VALUES ('"+archivoEncontrado+"','"+nombreClave+"',"+pkDiccionario+","+contador+")";
+                //ESTO ESTA MAL YA QUE SE EJECUTA VARIAS VECES Y TIENE MUCHO ACOMPLAMIENTO 
+                st.executeUpdate(megaConsulta);
+            }
+        }
+
         
-        
-        return  megaConsulta;
     }
 }

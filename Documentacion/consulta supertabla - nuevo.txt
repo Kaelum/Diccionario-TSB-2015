@@ -13,7 +13,7 @@ PRIMARY KEY (archivo, palabra, id_diccionario));
 
 Alter Table superTabla
 Add FOREIGN KEY (id_diccionario)
-References APP.DICCIONARIO (id_diccionario);
+References DICCIONARIO (id_diccionario);
 
 -- add a unique constraint to a column
 ALTER TABLE diccionario 

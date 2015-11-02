@@ -7,15 +7,13 @@ package CapaLogicaDeNegocios;
 
 import Soporte.Cronometro;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 /**
  *
@@ -31,10 +29,7 @@ public class Archivo  extends File {
         super(string);
     }
     
-    public Palabra[] leerTodasLasPalabras22(){
-        //es menos eficiente y lindo este codigo pero el otro no funciona
-        return  null;
-    }
+
     public Palabra[] leerTodasLasPalabras(){
         //voy a cornometrar el tiempo
         Cronometro cronometro = new Cronometro();
@@ -78,19 +73,7 @@ public class Archivo  extends File {
         return palabras;
     } 
     
-    private String leerTextoCompleto (){
-        //el archivo ya sabe su ubicacion por si mismo
-        byte [] encode = null;
-        try {
-            encode = Files.readAllBytes(Paths.get(getPath()));
-        } catch (IOException ex) {
-            
-            Logger.getLogger(Archivo.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new String(encode,Charset.defaultCharset());
-        }
-    
- 
+    // al final no lo usamos
     public String guardarBD(){
         String consulta="";
         consulta="INSERT INTO ACHIVO VALUES (default,'"+this.getName()+"')";

@@ -7,12 +7,9 @@ package CapaLogicaDeNegocios;
 
 import DB.DB;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -68,39 +65,43 @@ public class Diccionario {
         return resultado;
     }
     
-    @SuppressWarnings("empty-statement")
-    public Object getDatos(){
-        //array bidimencional de objetos con los datos de la tabla
-        String[] columnas = {"Palabra", "Frecuencia", "Archivos"};
-        DefaultTableModel Modelo_Tabla = new DefaultTableModel(null,columnas);
-        
+    public Object[][] getDatos(){
+        //se encarga de obtener la data de los 10 primaeros elementos de la tabla hash
         Object[][] data;
-        data = new Object[3][tablaDeFrecuencias.size()];
+        // como maximo voy a mostar 10, ya que es solo una preview
+        int tamanio = 10;
+        if (tablaDeFrecuencias.size()<10) {
+            tamanio = tablaDeFrecuencias.size();
+        }
+        data = new Object[tamanio][3];
+        //con el index voy recorriendo el arregloc como un for'
         int index = 0;
          //obtengo el iterador de la hash map
         Iterator it = tablaDeFrecuencias.keySet().iterator();
-        while(it.hasNext() && index <10){
-           //itero todas las claves
-          String nombreClave =  (String) it.next();
-          String nombre = nombreClave;
-          int contadorTotal = 0;
-          int cantidadArchivos = 0;
-          List <Frecuencia> listaEncontrada = tablaDeFrecuencias.get(nombreClave);
-            for (Frecuencia frecuenciaEncontrada : listaEncontrada) {
-                contadorTotal+= frecuenciaEncontrada.getContador();
-                cantidadArchivos++;}
-          Object[] fila = {nombre,contadorTotal,cantidadArchivos};
-          Modelo_Tabla.addRow(fila);
-          //data [index] = fila;
-          index++;
-          
+        //saco todas las variable afuera del ciclo para no crearlas en cada ciclo
+        int contadorTotal = 0;
+         int cantidadArchivos = 0;
+         List <Frecuencia> listaEncontrada;
+         String nombreClave;
+         //empiezo a recorrer
+        while(it.hasNext() && index <data.length){
+                //me olvide de reiniciar el contadir y el contador de archivos
+                contadorTotal = 0;
+                cantidadArchivos = 0;
+                //itero todas las claves
+               nombreClave =  (String) it.next();
+               //obtengo el valor de esa clave
+               listaEncontrada = tablaDeFrecuencias.get(nombreClave);
+                        for (Frecuencia frecuenciaEncontrada : listaEncontrada) {
+                            //una vez que tengo la lsoiyta la recorro y sumo
+                            contadorTotal+= frecuenciaEncontrada.getContador();
+                            cantidadArchivos++;}
+               Object[] fila = {nombreClave,contadorTotal,cantidadArchivos};
+               data [index] = fila;
+               index++;
         }
-    
-        
-                        
-                        
-        return Modelo_Tabla;
-    
+        return data;
+       
     }
     
     
@@ -111,7 +112,7 @@ public class Diccionario {
     }
     
     public String guardarBDFrecuencias(int pkDiccionario){
-        
+        //LOS METODOS DE CONEXTAR LOS DEBE HACER LA BASE DE DATOS, HAYQ UE ARREGLAR ESTO
         String megaConsulta = "INSERT INTO SUPERTABLA VALUES ";
         int contador = 0;
         String archivoEncontrado =""; 

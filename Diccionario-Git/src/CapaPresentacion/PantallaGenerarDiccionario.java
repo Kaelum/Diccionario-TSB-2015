@@ -8,19 +8,23 @@ package CapaPresentacion;
 import CapaLogicaDeNegocios.Archivo;
 import CapaLogicaDeNegocios.Diccionario;
 import CapaLogicaDeNegocios.GestorDiccionarios;
-import com.sun.org.apache.bcel.internal.generic.BREAKPOINT;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.layout.Border;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.showMessageDialog;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+
+import javax.swing.SwingWorker;
+import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+
 
 /**
  *
@@ -28,9 +32,7 @@ import javax.swing.table.TableModel;
  */
 public class PantallaGenerarDiccionario extends javax.swing.JFrame {
 
-    private String nombre;
     private Archivo [] archivosALeer;
-    private File [] ficherosLeidos; 
     private Diccionario dicionarioMemoria;
     /**
      * Creates new form PantallaGrafica
@@ -38,7 +40,98 @@ public class PantallaGenerarDiccionario extends javax.swing.JFrame {
     public PantallaGenerarDiccionario() {
         initComponents();
         
-        lbl_Estado.setText("");
+        lbl_Estado.setText("Aca se infromara el estado del sistema");
+        lbl_listaArchivos.setHorizontalAlignment(SwingConstants.CENTER);
+        lbl_listaArchivos.setVerticalAlignment(SwingConstants.CENTER);
+        // create a line border with the specified color and width
+        javax.swing.border.Border border = LineBorder.createGrayLineBorder();
+        lbl_listaArchivos.setBorder(border);
+    }
+    
+    
+    private void guardarDatosEnDB(){
+        SwingWorker worker = new SwingWorker<ImageIcon[], Void>() {
+            @Override
+            public ImageIcon[] doInBackground() {
+                System.out.println("Guardar");
+                jProgressBar1.setVisible(true);
+                jProgressBar1.setIndeterminate(true);
+                jButton1.setEnabled(false);
+                jButton2.setEnabled(false);
+                jButton3.setEnabled(false);
+                jButton4.setEnabled(false);
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                GestorDiccionarios gestor = new GestorDiccionarios();
+                try {
+                    gestor.GuardarDicionario(dicionarioMemoria);
+                } catch (SQLException ex) {
+
+                    lbl_Estado.setText("ERROR: Error de la BD");
+                    Logger.getLogger(PantallaGenerarDiccionario.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return null;
+            }
+
+            @Override
+            public void done() {
+                setCursor(null); //turn off the wait cursor
+                jProgressBar1.setIndeterminate(false);
+                jButton1.setEnabled(true);
+                jButton2.setEnabled(true);
+                jButton3.setEnabled(true);
+                jButton4.setEnabled(true);
+                lbl_Estado.setText("EXITO: El diccionario se guardo en la base de datos");
+                archivosALeer=null;
+                dicionarioMemoria=null;
+                lbl_listaArchivos.setText("No se selecicono ningun Archivo");
+                txt_nombre.setText("");
+                
+            }
+        };
+        
+        worker.execute();
+    
+    }
+    
+    
+    private void crearDiccionario(){
+        SwingWorker worker = new SwingWorker<ImageIcon[], Void>() {
+            @Override
+            public ImageIcon[] doInBackground() {
+                jProgressBar1.setVisible(true);
+                jProgressBar1.setIndeterminate(true);
+                jButton1.setEnabled(false);
+                jButton2.setEnabled(false);
+                jButton3.setEnabled(false);
+                jButton4.setEnabled(false);
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                GestorDiccionarios gestor = new GestorDiccionarios();
+                Diccionario dicionario = gestor.nuevoDiccionario(txt_nombre.getText(), archivosALeer);
+                dicionarioMemoria=dicionario;
+                //mestro una parte de la db, las 10 primeras filas
+                String[] columnas = {"Palabra", "Frecuencia", "Archivos"};
+                Object[][] datos  =dicionario.getDatos();
+                DefaultTableModel modelo = new DefaultTableModel(datos, columnas);
+                tablaUI.setModel(modelo);
+                
+                return null;
+            }
+
+            @Override
+            public void done() {
+                setCursor(null); //turn off the wait cursor
+                jProgressBar1.setIndeterminate(false);
+                jButton1.setEnabled(true);
+                jButton2.setEnabled(true);
+                jButton3.setEnabled(true);
+                jButton4.setEnabled(true);
+                lbl_Estado.setText("Se mostrarn solo las 10 primeas entradas del diccionario");
+                
+            }
+        };
+        
+        worker.execute();
+    
     }
 
     /**
@@ -60,11 +153,13 @@ public class PantallaGenerarDiccionario extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         lbl_Estado = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
+        jProgressBar1 = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setAlwaysOnTop(true);
+        setResizable(false);
 
-        jLabel1.setText("Nombre: ");
+        jLabel1.setText("Nombre Diccionario: ");
 
         txt_nombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -72,7 +167,7 @@ public class PantallaGenerarDiccionario extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Archivo: ");
+        jLabel2.setText("Cola de Archivos");
 
         lbl_listaArchivos.setText("\"No se selecicono ningun Archivo\"");
         lbl_listaArchivos.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -122,7 +217,14 @@ public class PantallaGenerarDiccionario extends javax.swing.JFrame {
             }
         });
 
-        lbl_Estado.setText("jLabel3");
+        lbl_Estado.setText("Estado");
+
+        jButton4.setText("Buscar");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -131,32 +233,38 @@ public class PantallaGenerarDiccionario extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_Estado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(78, 78, 78)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_nombre))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                        .addComponent(lbl_listaArchivos)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txt_nombre)
+                            .addComponent(lbl_listaArchivos, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)))
+                    .addComponent(lbl_Estado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txt_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(txt_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(lbl_listaArchivos, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -164,11 +272,12 @@ public class PantallaGenerarDiccionario extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(lbl_Estado)
-                .addGap(22, 22, 22)
+                .addComponent(lbl_Estado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
                 .addGap(21, 21, 21))
         );
 
@@ -205,13 +314,11 @@ public class PantallaGenerarDiccionario extends javax.swing.JFrame {
             String Cadenaarchivos="<html>";
             for (int i = 0; i < ficheros.length; i++) {
                 File fichero = ficheros[i];
-                Cadenaarchivos += "Fichero N "+i+" "+fichero.getName()+"<br>";
+                Cadenaarchivos += fichero.getName()+"<br>";
                 archivos [i] = new Archivo(ficheros[i].getAbsolutePath());
-               // archivos[i] = (Archivo) fichero;
             }
             Cadenaarchivos+= "</html>";
             lbl_listaArchivos.setText(Cadenaarchivos);
-            ficherosLeidos=ficheros;
             archivosALeer = archivos;
         }
         
@@ -224,17 +331,11 @@ public class PantallaGenerarDiccionario extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        GestorDiccionarios gestor = new GestorDiccionarios();
+        
         if (!txt_nombre.getText().isEmpty()) {
             
             if (archivosALeer != null) {
-                Diccionario dicionario = gestor.nuevoDiccionario(txt_nombre.getText(), archivosALeer);
-                dicionarioMemoria=dicionario;
-                tablaUI.setModel((TableModel) dicionario.getDatos());
-                //System.out.println("------ Dic "+ dicionario.toString());
-                lbl_Estado.setText("Se mostrarn solo las 10 primeas entradas del diccionario");
-                return;
-
+                    crearDiccionario();
             }
             lbl_Estado.setText("ERROR: Debe seleccionar los archivos a procesar");
             return;
@@ -247,17 +348,18 @@ public class PantallaGenerarDiccionario extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         if (dicionarioMemoria!=null) {
-            System.out.println("Guardar");
-            GestorDiccionarios gestor = new GestorDiccionarios();
-            try {
-                gestor.GuardarDicionario(dicionarioMemoria);
-            } catch (SQLException ex) {
-                Logger.getLogger(PantallaGenerarDiccionario.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return;
+              guardarDatosEnDB();      
         }
         lbl_Estado.setText("Debe Generar el diccionario antes de guardarlo");
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        Busqueda pantallaBuscar = new Busqueda();
+        pantallaBuscar.setVisible(true);
+        //mato el formualrio
+        this.dispose();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -294,15 +396,17 @@ public class PantallaGenerarDiccionario extends javax.swing.JFrame {
             }
         });
     }
-    
+  
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl_Estado;
     private javax.swing.JLabel lbl_listaArchivos;

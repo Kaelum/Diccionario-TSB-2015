@@ -8,7 +8,6 @@ package CapaLogicaDeNegocios;
 // Aca explica todas las relaciones, leer bien para entender
 //https://vaughnvernon.co/?page_id=31
 //http://www.vogella.com/tutorials/DependencyInjection/article.html
-import CapaLogicaDeNegocios.Diccionario;
 import CapaPresentacion.PantallaConsola;
 import DB.DB;
 import Soporte.Cronometro;
@@ -17,12 +16,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import javafx.beans.property.SimpleListProperty;
+
 
 
 /**
@@ -105,12 +100,11 @@ public class GestorDiccionarios {
     
     public Diccionario nuevoDiccionario(String nombreDic, Archivo[] archivosTexto){
         //En este punto tengo todas las palabras filtradas pero sin contar.
-        //Palabra[] TodasLaspalabras = archivosTexto[0].leerTodasLasPalabras();
+        //COMO TENGO VARIOs archivos TENGO QUE RECORRERLOS Y SACAR LAS PALABRAS FILTRADAS EN UN SOLLO VECTOR
         Palabra[] TodasLaspalabras =  new Palabra[0];
         for (int i = 0; i < archivosTexto.length; i++) {
             Palabra[] palabras = archivosTexto[i].leerTodasLasPalabras();
             Palabra[] temp = new Palabra[palabras.length+TodasLaspalabras.length];
-            
             System.arraycopy( palabras, 0, temp, 0, palabras.length );
             System.arraycopy( TodasLaspalabras, 0, temp, palabras.length, TodasLaspalabras.length );
             TodasLaspalabras = temp;
@@ -119,8 +113,8 @@ public class GestorDiccionarios {
         //CORNOMETRO LA TABLA HAS
         Cronometro cronometro = new  Cronometro();
         cronometro.iniciar();
-        HashMap hm = new HashMap(1000000);
-        HashMap <String,  List <Frecuencia>> tablaDeFrecuencias = new HashMap <String, List <Frecuencia>>(100000);
+        //EL HASH MAP COMO MAXIMO VA A TENER EL TAMANIO DE TODAS LAS PALABRAS (SI FUERAN TODAS UNICAS)
+        HashMap <String,  List <Frecuencia>> tablaDeFrecuencias = new HashMap <String, List <Frecuencia>>(TodasLaspalabras.length);
         //recorro todas las palabras y las agrego a la tabla.
         for (int i = 0; i < TodasLaspalabras.length; i++) {
             // una palabra va a tener una nombre y un archivo
@@ -131,7 +125,6 @@ public class GestorDiccionarios {
                     // una vez que se que la palabra (clave) esta en la tabla voy a buscar si es igual, es decir en el mismo archivo
                     List <Frecuencia> listaEncontrada = tablaDeFrecuencias.get(palabraAagregar.getNombre());
                     //pregunto si esta en la lista
-
                         //en caso de estar voy a sumarle uno al contador
                         boolean estaEnLaLista = false;
                         for (Frecuencia frecuenciaEncontrada : listaEncontrada) {

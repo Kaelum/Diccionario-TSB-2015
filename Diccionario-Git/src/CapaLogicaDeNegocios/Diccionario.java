@@ -6,6 +6,7 @@
 package CapaLogicaDeNegocios;
 
 import DB.DB;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -131,21 +132,13 @@ public class Diccionario {
                 }
                  
             }
-//            for (Frecuencia frecuenciaEncontrada : listaEncontrada) {
-//                                contador = frecuenciaEncontrada.getContador();
-//                                archivoEncontrado = frecuenciaEncontrada.getPalabra().getArchivo();
-//                                //NO ANDA PORQUE SON MUCHAS LINEAS Y EL EXECUTE QUERY NO FUNCIONA ASI
-//                                //megaConsulta += "INSERT INTO SUPERTABLA VALUES ('"+archivoEncontrado+"','"+nombreClave+"',"+pkDiccionario+","+contador+");";
-//                                //megaConsulta += " \n ";
-//                                megaConsulta += "('"+archivoEncontrado+"','"+nombreClave+"',"+pkDiccionario+","+contador+"),  ";
-//            }
         }
 
         return megaConsulta;
     }
     
     
-    
+    //eset con todos llos archivos tarda 4 min
     public void connectarYguardarBDFrecuencias(int pkDiccionario) throws SQLException{
         DB baseDatos = new DB();
         baseDatos.ConectarBD();
@@ -170,6 +163,43 @@ public class Diccionario {
                 st.executeUpdate(megaConsulta);
             }
         }
+
+        
+    }
+    
+    
+    
+    public void connectarYguardarBDFrecuencias2(int pkDiccionario) throws SQLException{
+        DB baseDatos = new DB();
+        baseDatos.ConectarBD();
+        Statement st = baseDatos.getConnection().createStatement();
+        PreparedStatement pstmt = baseDatos.getConnection().prepareStatement("INSERT INTO SUPERTABLA VALUES (?, ?, ?, ?)");
+
+        String megaConsulta = "";
+        int contador = 0;
+        String archivoEncontrado =""; 
+        // Imprimimos el Map con un Iterador
+        Iterator it = tablaDeFrecuencias.keySet().iterator();
+        while(it.hasNext()){
+            
+            String nombreClave =  (String) it.next();
+            List <Frecuencia> listaEncontrada = tablaDeFrecuencias.get(nombreClave);
+            for (Iterator<Frecuencia> iterator = listaEncontrada.iterator(); iterator.hasNext();) {
+                Frecuencia next = iterator.next();
+                contador = next.getContador();
+                archivoEncontrado = next.getPalabra().getArchivo();
+                pstmt.setString(1, archivoEncontrado);
+                pstmt.setString(2, nombreClave);
+                pstmt.setInt(3, pkDiccionario);
+                pstmt.setInt(4, contador);
+                pstmt.addBatch();
+                //megaConsulta = "INSERT INTO SUPERTABLA VALUES ('"+archivoEncontrado+"','"+nombreClave+"',"+pkDiccionario+","+contador+")";
+                //ESTO ESTA MAL YA QUE SE EJECUTA VARIAS VECES Y TIENE MUCHO ACOMPLAMIENTO 
+                //st.executeUpdate(megaConsulta);
+            }
+        }
+        
+        pstmt.executeBatch();
 
         
     }

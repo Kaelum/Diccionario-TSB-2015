@@ -207,7 +207,7 @@ public class GestorDiccionarios {
         //ESTO ANDA PERO ESTA MAL, ES INEFICIENTE Y MUY ACOPLADO
         //LE DIGO AL DICCIONARIO EN MEORARI QUE SE RECORRA E INSERTE FILA POR FIILA.
         //ANTES QUERIA ARMAR UNA SOLA CONSULTA GIGANTE Y EJECUTARLA TODA DE UNA PERO NO PUDE HACERLO, SE PUEDE PERO NO ME SALE.
-        diccionario.connectarYguardarBDFrecuencias(generatedKey);
+        diccionario.connectarYguardarBDFrecuencias2(generatedKey);
 
        cronometro.parar();
        System.out.println("Tiempo que atrda en guardar: " + cronometro.tiempo());

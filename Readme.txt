@@ -1,3 +1,9 @@
+------------RESULTADO---------------
+Calificación                     |	10,00 / 10,00
+Calificado sobre                 |	Viernes, 6 de noviembre de 2015, 16:55
+Calificado por                   |  Diego Serrano
+Comentarios de retroalimentación |	Muy buen trabajo. Muy buena la performance de todas las operaciones. Bien usados los preparedstatements. Bien el uso de paquetes. La interfaz resulta algo confusa. Si se presiona Buscar apenas arranca el programa se abre la ventana pero sin los datos de los diccionarios.
+------------------------------------
 CONSIGNA DEL TRABAJO PRACTICO
 
 A los efectos de gestionar la información producida por el trabajo de un grupo de investigación en lingüística, se necesita un programa que sea capaz de procesar un conjunto de archivos de texto y construir un vocabulario con todas las palabras diferentes descubiertas en los archivos, de forma de determinar además la frecuencia de aparición de cada palabra en el conjunto de archivos.
